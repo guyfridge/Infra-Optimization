@@ -1,0 +1,60 @@
+---
+- name: Create Compute Engine instances
+  hosts: localhost
+  gather_facts: no
+  vars:
+    gcp_project: keen-alignment-321607
+    gcp_cred_kind: serviceaccount
+    gcp_cred_file: credentials.json
+    zone: us-central1-a
+    region: us-central1
+    machine_type: n1-standard-1
+    image: projects/centos-cloud/global/images/family/centos-8
+  tasks:
+    - name: Create an IP address for Master Node
+      gcp_compute_address:
+        name: master-ip
+        region: "{{ region }}"
+        project: "{{ gcp_project }}"
+        service_account_file: "{{ gcp_cred_file }}"
+        auth_kind: "{{ gcp_cred_kind }}"
+      register: master_ip
+    - name: Creating VM for Master Node
+      gcp_compute_instance:
+        name: masternode
+        machine_type: "{{ machine_type }}"
+        disks:
+          - auto_delete: true
+            boot: true
+            initialize_params:
+              source_image: "{{ image }}"
+        network_interfaces:
+          - access_configs:
+              - name: External NAT
+                nat_ip: "{{ master_ip }}"
+                type: ONE_TO_ONE_NAT
+        tags:
+          items:
+            - kube-master
+        zone: "{{ zone }}"
+        project: "{{ gcp_project }}"
+        service_account_file: "{{ gcp_cred_file }}"
+        auth_kind: "{{ gcp_cred_kind }}"
+      register: master
+  post_tasks:
+    - name: Wait for SSH for instance
+      wait_for: delay=5 sleep=5 host={{ master_ip.address }} port=22 state=started
+        timeout=100
+    - name: Save host data for Masternode
+      add_host: hostname={{ master_ip.address }} groupname=gce_masternode
+    - name: Pause for 1 minutes to ready instance
+      pause:
+        minutes: 1
+- name: Configuring Kubernetes Master
+  hosts: gce_masternode
+  become: yes
+  become_method: sudo
+  remote_user: guyfridge
+  roles:
+    - roles/master
+
