@@ -51,6 +51,19 @@ Change to the newly created directory
 ```
 cd learn-terraform-provision-gke-cluster
 ```
+Edit the terraform.tfvars file with your Google Cloud project_id and region value
+```
+# terraform.tfvars
+project_id = "sl-capstone-project"
+region     = "us-west1"
+```
+Edit the gke.tf file and add your gke cluster username where prompted
+```
+variable "gke_username" {
+  default     = "guyfridge"
+  description = "gke username"
+}
+```
 
 ### Install Ansible and Verify
 ```
