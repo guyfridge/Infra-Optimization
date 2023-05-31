@@ -57,13 +57,14 @@ Edit the terraform.tfvars file with your Google Cloud project_id and region valu
 project_id = "sl-capstone-project"
 region     = "us-west1"
 ```
-Edit the gke.tf file and add your gke cluster username where prompted
+Edit the gke.tf file and add your gke cluster username where prompted. Change the number of VMs to reflect the initial desired cluster size.
 ```
 variable "gke_username" {
   default     = "guyfridge"
   description = "gke username"
 }
 ```
+Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 1000Gb available space in your designated region for provisioning a three node cluster. 
 
 ### Install Ansible and Verify
 ```
