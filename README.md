@@ -68,7 +68,12 @@ variable "gke_num_nodes" {
   description = "number of gke nodes"
 }
 ```
-Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 1000Gb available space in your designated region for provisioning a three node cluster. 
+Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 1000Mb available space in your designated region for provisioning a three node cluster.
+```
+terraform init
+terraform plan
+terraform apply
+```
 
 ### Install Ansible and Verify
 ```
