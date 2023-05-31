@@ -41,6 +41,12 @@ sudo apt-get install terraform
 
 terraform -help
 ```
+## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
+### Set up and initialize the Terraform workspace
+"git clone https://github.com/hashicorp/learn-terraform-provision-gke-cluster"
+Change to the newly created directory
+"cd learn-terraform-provision-gke-cluster"
+
 ### Install Ansible and Verify
 ```
 sudo apt-add-repository ppa:ansible/ansible
