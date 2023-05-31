@@ -8,7 +8,7 @@ Create a DevOps infrastructure for an e-commerce application to run on high-avai
 5. Take snapshot of ETCD database
 6. Set criteria such that if the memory of CPU goes beyond 50%, environments automatically get scaled up and configured
 
-## Manually create a controller VM on Google Cloud and install Ansible, Docker, and Kubernetes on it
+## Manually create a controller VM on Google Cloud and install Terraform, Ansible, Docker, and Kubernetes on it
 Inside Google Cloud, create an e2-medium machine with the following:
 1. Ubuntu OS 
 2. 10GB storage 
@@ -18,6 +18,28 @@ Inside Google Cloud, create an e2-medium machine with the following:
 ```
 sudo apt-get update
 sudo apt-get upgrade
+```
+### Install Terraform and Verify
+```
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+
+wget -O- https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+gpg --no-default-keyring \
+--keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+--fingerprint
+
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+sudo apt update
+
+sudo apt-get install terraform
+
+terraform -help
 ```
 ### Install Ansible and Verify
 ```
