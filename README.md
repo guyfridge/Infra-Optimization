@@ -57,7 +57,7 @@ Edit the terraform.tfvars file with your Google Cloud project_id and region valu
 project_id = "sl-capstone-project"
 region     = "us-west1"
 ```
-Edit the gke.tf file and add your gke cluster username where prompted. Change the number of VMs to reflect the initial desired cluster size (3).
+Edit the gke.tf file and add your gke cluster username where prompted. Change the number of VMs to reflect the initial desired cluster size.
 ```
 variable "gke_username" {
   default     = "guyfridge"
