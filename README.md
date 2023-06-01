@@ -99,6 +99,11 @@ Connect to your GKE cluster from the master
 ```
 gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>
 ```
+Verify master-gke cluster connectivity
+```
+kubectl get nodes -o wide
+```
+
 
 ### Install Ansible and Verify
 ```
