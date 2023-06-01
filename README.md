@@ -70,6 +70,35 @@ terraform init
 terraform plan
 terraform apply
 ```
+### Configure kubectl on the master node to access the GKE cluster
+Install gcloud CLI using this guide https://cloud.google.com/sdk/docs/install
+```
+curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz
+```
+Extract the tar file
+```
+tar -xf google-cloud-cli-433.0.0-linux-x86.tar.gz
+```
+Add the gcloud SDK to your path and run the installation
+```
+./google-cloud-sdk/install.sh
+```
+From the home directory, verify the installation
+```
+gcloud --version
+```
+Check which componnents are installed
+```
+gcloud components list
+```
+Install kubectl
+```
+gcloud components install kubectl
+```
+Connect to your GKE cluster from the master
+```
+gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>
+```
 
 ### Install Ansible and Verify
 ```
