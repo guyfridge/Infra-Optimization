@@ -70,12 +70,14 @@ echo \
 `sudo docker run hello-world`
 
 ### Install CRI-Docker
-```
-sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installCRIDockerd.sh -P /tmp
-sudo chmod 755 /tmp/installCRIDockerd.sh
-sudo bash /tmp/installCRIDockerd.sh
-sudo systemctl restart cri-docker.service
-```
+1. Download the executable from the repository
+`sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installCRIDockerd.sh -P /tmp~
+2. Change the executable's permissions
+`sudo chmod 755 /tmp/installCRIDockerd.sh`
+3. Execute the file
+`sudo bash /tmp/installCRIDockerd.sh`
+4. Restart the service
+`sudo systemctl restart cri-docker.service`
 
 ## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
 ### Set up and initialize the Terraform workspace
