@@ -103,6 +103,17 @@ Verify master-gke cluster connectivity
 ```
 kubectl get nodes -o wide
 ```
+### Use Port Forwarding to Access Applications in a Cluster
+Install mongosh
+1. Import the MongoDB public GPG Key
+`wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -`
+2. Create a list file for MongoDB 
+`echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list`
+3. Reload local package database 
+`sudo apt-get update`
+4. Install the mongosh package (latest stable version) 
+`sudo apt-get install -y mongodb-mongosh`
+
 
 
 ### Install Ansible and Verify
