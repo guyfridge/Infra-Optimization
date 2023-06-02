@@ -42,6 +42,33 @@ sudo apt-get install terraform
 
 terraform -help
 ```
+### Install Docker on the controller VM
+1. Update the apt package index and install packages to allow apt to use a repository over HTTPS
+```
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+```
+2. Add Docker GPG key
+```
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+```
+3. Set up the repository
+```
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+### Install Docker Engine
+1. Update the apt package index
+`sudo apt-get update`
+2. Install latest version of Docker Engine, containerd, and Docker Compose
+`sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
+3. Verify correct installation of Docker Engine by pulling 'hello-world' image
+`sudo docker run hello-world`
+
 ## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
 ### Set up and initialize the Terraform workspace
 1. Clone the following respository on the controller VM
@@ -87,6 +114,7 @@ terraform apply
 `gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
 8. Verify master-gke cluster connectivity
 `kubectl get nodes -o wide`
+
 
 
 ### Install Ansible and Verify
