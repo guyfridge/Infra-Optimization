@@ -3,11 +3,10 @@ Create a DevOps infrastructure for an e-commerce application to run on high-avai
 ## Steps to be Taken
 1. Manually create a controller VM on Google Cloud and install Terraform
 2. On the controller VM, use Terraform to automate the provisioning of a GKE cluster with Docker installed
-3. Launch the Kubernetes Dashboard
-4. Create a new user with permissions to create, list, get, update, and delete pods
-5. Configure application on the pod
-6. Take snapshot of ETCD database
-7. Set criteria such that if the memory of CPU goes beyond 50%, environments automatically get scaled up and configured
+3. Create a new user with permissions to create, list, get, update, and delete pods
+4. Configure application on the pod
+5. Take snapshot of ETCD database
+6. Set criteria such that if the memory of CPU goes beyond 50%, environments automatically get scaled up and configured
 
 ## Manually create a controller VM on Google Cloud and install Terraform, Ansible, Docker, and Kubernetes on it
 Inside Google Cloud, create an e2-medium machine with the following:
@@ -42,7 +41,7 @@ sudo apt-get install terraform
 
 terraform -help
 ```
-### [Install Docker on the controller VM](https://docs.docker.com/engine/install/ubuntu/)
+### [Install Docker on the controller VM](https://docs.docker.com/engine/install/ubuntu/) Necessary?
 1. Update the apt package index and install packages to allow apt to use a repository over HTTPS
 ```
 sudo apt-get update
@@ -61,7 +60,7 @@ echo \
   "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
-### Install Docker Engine
+### Install Docker Engine Necessary?
 1. Update the apt package index
 `sudo apt-get update`
 2. Install latest version of Docker Engine, containerd, and Docker Compose
@@ -107,7 +106,7 @@ terraform init
 terraform plan
 terraform apply
 ```
-### Configure kubectl on the master node to access the GKE cluster
+### Configure kubectl on the master node to access the GKE cluster Necessary
 1. download the Linux 64-bit archive file
 `curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
 2. Extract the tar file
@@ -125,6 +124,7 @@ terraform apply
 8. Verify master-gke cluster connectivity
 `kubectl get nodes -o wide`
 
+## Create a new user with permissions to create, list, get, update, and delete pods
 
 
 ### Install Ansible and Verify
