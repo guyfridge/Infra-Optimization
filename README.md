@@ -69,6 +69,14 @@ echo \
 3. Verify correct installation of Docker Engine by pulling 'hello-world' image
 `sudo docker run hello-world`
 
+### Install CRI-Docker
+```
+sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installCRIDockerd.sh -P /tmp
+sudo chmod 755 /tmp/installCRIDockerd.sh
+sudo bash /tmp/installCRIDockerd.sh
+sudo systemctl restart cri-docker.service
+```
+
 ## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
 ### Set up and initialize the Terraform workspace
 1. Clone the following respository on the controller VM
