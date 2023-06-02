@@ -42,7 +42,7 @@ sudo apt-get install terraform
 
 terraform -help
 ```
-### Install Docker on the controller VM
+### [Install Docker on the controller VM](https://docs.docker.com/engine/install/ubuntu/)
 1. Update the apt package index and install packages to allow apt to use a repository over HTTPS
 ```
 sudo apt-get update
