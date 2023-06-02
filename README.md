@@ -106,7 +106,7 @@ terraform init
 terraform plan
 terraform apply
 ```
-### Configure kubectl on the master node to access the GKE cluster Necessary
+### Configure kubectl on the master node to access the GKE cluster Necessary?
 1. download the Linux 64-bit archive file
 `curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
 2. Extract the tar file
@@ -125,7 +125,33 @@ terraform apply
 `kubectl get nodes -o wide`
 
 ## Create a new user with permissions to create, list, get, update, and delete pods
-
+1. Create a ClusterRole with permissions to create, list, get, update, and delete pods across all namespaces
+`sudo vi pod-management-clusterRole.yaml`
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pod-management-clusterrole
+rules:
+- apiGroups: ["*"]
+  resources: ["pods","deployments", "replicasets", "services"]
+  verbs: ["get", "list", "delete", "create", "update"]
+```
+2. Create a ClusterRoleBinding to Assign the ClusterRole to a specific user
+`sudo vi pod-management-clusterRoleBinding.yaml`
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pod-management-clusterrolebinding
+subjects:
+- kind: User
+  name: user1 # name of your service account
+roleRef: # referring to your ClusterRole
+  kind: ClusterRole
+  name: pod-management
+  apiGroup: rbac.authorization.k8s.io
+```
 
 ### Install Ansible and Verify
 ```
