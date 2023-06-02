@@ -43,66 +43,50 @@ terraform -help
 ```
 ## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
 ### Set up and initialize the Terraform workspace
-Clone the following respository on the controller VM
+1. Clone the following respository on the controller VM
 ```
 git clone https://github.com/hashicorp/learn-terraform-provision-gke-cluster
 ```
-Change to the newly created directory
-```
-cd learn-terraform-provision-gke-cluster
-```
-Edit the terraform.tfvars file with your Google Cloud project_id and region value
+2. Change to the newly created directory 
+`cd learn-terraform-provision-gke-cluster`
+3. Edit the terraform.tfvars file with your Google Cloud project_id and region value
 ```
 # terraform.tfvars
 project_id = "sl-capstone-project"
 region     = "us-west1"
 ```
-Edit the gke.tf file and add your gke cluster username where prompted.
+4. Edit the gke.tf file and add your gke cluster username where prompted.
 ```
 variable "gke_username" {
   default     = "guyfridge"
   description = "gke username"
 }
 ```
-Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 1000Mb available space in your designated region for provisioning a six node cluster.
+5. Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 1000Mb available space in your designated region for provisioning a six node cluster.
 ```
 terraform init
 terraform plan
 terraform apply
 ```
 ### Configure kubectl on the master node to access the GKE cluster
-Install gcloud CLI using this guide https://cloud.google.com/sdk/docs/install
+1. Install gcloud CLI using this guide https://cloud.google.com/sdk/docs/install
 ```
 curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz
 ```
-Extract the tar file
-```
-tar -xf google-cloud-cli-433.0.0-linux-x86.tar.gz
-```
-Add the gcloud SDK to your path and run the installation
-```
-./google-cloud-sdk/install.sh
-```
-From the home directory, verify the installation
-```
-gcloud --version
-```
-Check which componnents are installed
-```
-gcloud components list
-```
-Install kubectl
-```
-gcloud components install kubectl
-```
-Connect to your GKE cluster from the master
-```
-gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>
-```
-Verify master-gke cluster connectivity
-```
-kubectl get nodes -o wide
-```
+2. Extract the tar file
+`tar -xf google-cloud-cli-433.0.0-linux-x86.tar.gz`
+3. Add the gcloud SDK to your path and run the installation
+`./google-cloud-sdk/install.sh`
+4. From the home directory, verify the installation
+`gcloud --version`
+5. Check which componnents are installed
+`gcloud components list`
+6. Install kubectl
+`gcloud components install kubectl`
+7. Connect to your GKE cluster from the master
+`gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
+8. Verify master-gke cluster connectivity
+`kubectl get nodes -o wide`
 ### Use Port Forwarding to Access Applications in a Cluster
 Install mongosh
 1. Import the MongoDB public GPG Key
