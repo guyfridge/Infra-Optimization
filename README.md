@@ -78,6 +78,33 @@ echo \
 4. Restart the service
 `sudo systemctl restart cri-docker.service`
 
+### Configure kubectl on the master node to access the GKE cluster Necessary?
+1. download the Linux 64-bit archive file
+`curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
+2. Extract the tar file
+`tar -xf google-cloud-cli-433.0.0-linux-x86.tar.gz`
+3. Add the gcloud SDK to your path and run the installation
+`./google-cloud-sdk/install.sh`
+4. From the home directory, verify the installation
+`gcloud --version`
+5. Check which componnents are installed
+`gcloud components list`
+6. Install kubectl
+`gcloud components install kubectl`
+7. Connect to your GKE cluster from the master
+`gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
+8. Verify master-gke cluster connectivity
+`kubectl get nodes -o wide`
+
+### Install Kubernetes with Kubectl, Kubeadm, Kubelet
+1. Download the executable from this repo
+`sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installK8S.sh -P /tmp`
+2. Change the permissions on the executable
+`sudo chmod 755 /tmp/installK8S.sh`
+3. Execute the file to install Kubernetes
+`sudo bash /tmp/installK8S.sh`
+
+
 ## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
 ### Set up and initialize the Terraform workspace
 1. Clone the following respository on the controller VM
@@ -106,23 +133,6 @@ terraform init
 terraform plan
 terraform apply
 ```
-### Configure kubectl on the master node to access the GKE cluster Necessary?
-1. download the Linux 64-bit archive file
-`curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
-2. Extract the tar file
-`tar -xf google-cloud-cli-433.0.0-linux-x86.tar.gz`
-3. Add the gcloud SDK to your path and run the installation
-`./google-cloud-sdk/install.sh`
-4. From the home directory, verify the installation
-`gcloud --version`
-5. Check which componnents are installed
-`gcloud components list`
-6. Install kubectl
-`gcloud components install kubectl`
-7. Connect to your GKE cluster from the master
-`gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
-8. Verify master-gke cluster connectivity
-`kubectl get nodes -o wide`
 
 ## Create a new user with permissions to create, list, get, update, and delete pods
 1. Create a ClusterRole with permissions to create, list, get, update, and delete pods across all namespaces
