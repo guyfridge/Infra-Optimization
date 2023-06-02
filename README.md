@@ -58,6 +58,7 @@ region     = "us-west1"
 ```
 4. Edit the gke.tf file and add your gke cluster username where prompted.
 ```
+# gke.tf
 variable "gke_username" {
   default     = "guyfridge"
   description = "gke username"
