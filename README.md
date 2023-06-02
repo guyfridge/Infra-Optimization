@@ -71,7 +71,7 @@ terraform plan
 terraform apply
 ```
 ### Configure kubectl on the master node to access the GKE cluster
-1. Install gcloud CLI using this guide https://cloud.google.com/sdk/docs/install
+1. download the Linux 64-bit archive file
 ```
 curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz
 ```
