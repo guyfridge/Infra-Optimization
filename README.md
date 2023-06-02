@@ -1,12 +1,13 @@
 # Infra-Optimization
 Create a DevOps infrastructure for an e-commerce application to run on high-availability mode.
 ## Steps to be Taken
-1. Manually create a controller VM on Google Cloud and install Ansible, Docker, and Kubernetes on it
-2. On the controller VM, use Ansible to automate the provisioning of a Kubernetes cluster with Docker
-3. Create a new user with permissions to create, list, get, update, and delete pods
-4. Configure application on the pod
-5. Take snapshot of ETCD database
-6. Set criteria such that if the memory of CPU goes beyond 50%, environments automatically get scaled up and configured
+1. Manually create a controller VM on Google Cloud and install Terraform
+2. On the controller VM, use Terraform to automate the provisioning of a GKE cluster with Docker installed
+3. Launch the Kubernetes Dashboard
+4. Create a new user with permissions to create, list, get, update, and delete pods
+5. Configure application on the pod
+6. Take snapshot of ETCD database
+7. Set criteria such that if the memory of CPU goes beyond 50%, environments automatically get scaled up and configured
 
 ## Manually create a controller VM on Google Cloud and install Terraform, Ansible, Docker, and Kubernetes on it
 Inside Google Cloud, create an e2-medium machine with the following:
