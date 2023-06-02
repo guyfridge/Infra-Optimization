@@ -152,6 +152,17 @@ roleRef: # referring to your ClusterRole
   name: pod-management
   apiGroup: rbac.authorization.k8s.io
 ```
+3. Create a directory for storing the user1 cert
+```
+sudo mkdir -p /home/certs
+cd /home/certs
+```
+4. Create a private key for your user
+`sudo openssl genrsa -out user1.key 2048`
+5. Create a certificate sign request, user1.csr, using the private key we just created 
+`openssl req -new -key user1.key -out user1.csr`
+6. 
+
 
 ### Install Ansible and Verify
 ```
