@@ -45,9 +45,7 @@ terraform -help
 ## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
 ### Set up and initialize the Terraform workspace
 1. Clone the following respository on the controller VM
-```
-git clone https://github.com/hashicorp/learn-terraform-provision-gke-cluster
-```
+`git clone https://github.com/hashicorp/learn-terraform-provision-gke-cluster`
 2. Change to the newly created directory 
 `cd learn-terraform-provision-gke-cluster`
 3. Edit the terraform.tfvars file with your Google Cloud project_id and region value
