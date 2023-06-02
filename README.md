@@ -71,7 +71,7 @@ echo \
 
 ### Install CRI-Docker
 1. Download the executable from the repository
-`sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installCRIDockerd.sh -P /tmp~
+`sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installCRIDockerd.sh -P /tmp`
 2. Change the executable's permissions
 `sudo chmod 755 /tmp/installCRIDockerd.sh`
 3. Execute the file
