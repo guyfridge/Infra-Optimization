@@ -13,6 +13,7 @@ Inside Google Cloud, create an e2-medium machine with the following:
 1. Ubuntu OS 
 2. 10GB storage 
 3. enable HTTP / HTTPS traffic
+4. Allow full access to all Cloud APIs
 
 ### Update the VM
 ```
