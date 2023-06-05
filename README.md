@@ -29,7 +29,7 @@ sudo apt-get upgrade
 4. Restart the docker service
 `sudo systemctl restart docker.service`
 
-### [Install CRI-Docker](https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md) Necessary?
+### Install CRI-Docker
 1. Download the executable from the repository
 `sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installCRIDockerd.sh -P /tmp`
 2. Change the executable's permissions
@@ -574,5 +574,6 @@ pip3 install google-auth requests
 ```
 ./main.sh
 ```
-
+## Resources
+1. https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md
 
