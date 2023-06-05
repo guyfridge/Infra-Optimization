@@ -47,7 +47,7 @@ sudo apt-get upgrade
 3. Execute the file to install Kubernetes
 `sudo bash /tmp/installK8S.sh`
 
-### Configure kubectl on the master node to access the GKE cluster Necessary?
+### Configure kubectl on the master node to access the GKE cluster
 1. download the Linux 64-bit archive file
 `curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
 2. Extract the tar file
