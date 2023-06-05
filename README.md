@@ -8,7 +8,7 @@ Create a DevOps infrastructure for an e-commerce application to run on high-avai
 5. Take snapshot of ETCD database
 6. Set criteria such that if the memory of CPU goes beyond 50%, environments automatically get scaled up and configured
 
-## Manually create a controller VM on Google Cloud and install Terraform, Ansible, Docker, and Kubernetes on it
+## Manually create a controller VM on Google Cloud and install Terraform, Docker, and Kubernetes on it
 Inside Google Cloud, create an e2-medium machine with the following:
 1. Ubuntu OS 
 2. 10GB storage 
@@ -19,6 +19,52 @@ Inside Google Cloud, create an e2-medium machine with the following:
 sudo apt-get update
 sudo apt-get upgrade
 ```
+### Install Docker
+1. Download the executable from the repository 
+`sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installDocker.sh -P /tmp`
+2. Change the permissions on the executable
+`sudo chmod 755 /tmp/installDocker.sh`
+3. Execute the file
+`sudo bash /tmp/installDocker.sh`
+4. Restart the docker service
+`sudo systemctl restart docker.service`
+
+### [Install CRI-Docker](https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md) Necessary?
+1. Download the executable from the repository
+`sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installCRIDockerd.sh -P /tmp`
+2. Change the executable's permissions
+`sudo chmod 755 /tmp/installCRIDockerd.sh`
+3. Execute the file
+`sudo bash /tmp/installCRIDockerd.sh`
+4. Restart the service
+`sudo systemctl restart cri-docker.service`
+
+### Install Kubernetes with Kubectl, Kubeadm, Kubelet
+1. Download the executable from this repo
+`sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installK8S.sh -P /tmp`
+2. Change the permissions on the executable
+`sudo chmod 755 /tmp/installK8S.sh`
+3. Execute the file to install Kubernetes
+`sudo bash /tmp/installK8S.sh`
+
+### Configure kubectl on the master node to access the GKE cluster Necessary?
+1. download the Linux 64-bit archive file
+`curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
+2. Extract the tar file
+`tar -xf google-cloud-cli-433.0.0-linux-x86.tar.gz`
+3. Add the gcloud SDK to your path and run the installation
+`./google-cloud-sdk/install.sh`
+4. From the home directory, verify the installation
+`gcloud --version`
+5. Check which componnents are installed
+`gcloud components list`
+6. Install kubectl
+`gcloud components install kubectl`
+7. Connect to your GKE cluster from the master
+`gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
+8. Verify master-gke cluster connectivity
+`kubectl get nodes -o wide`
+
 ### Install Terraform and Verify
 ```
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
@@ -67,42 +113,6 @@ echo \
 `sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
 3. Verify correct installation of Docker Engine by pulling 'hello-world' image
 `sudo docker run hello-world`
-
-### [Install CRI-Docker](https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md) Necessary?
-1. Download the executable from the repository
-`sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installCRIDockerd.sh -P /tmp`
-2. Change the executable's permissions
-`sudo chmod 755 /tmp/installCRIDockerd.sh`
-3. Execute the file
-`sudo bash /tmp/installCRIDockerd.sh`
-4. Restart the service
-`sudo systemctl restart cri-docker.service`
-
-### Configure kubectl on the master node to access the GKE cluster Necessary?
-1. download the Linux 64-bit archive file
-`curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
-2. Extract the tar file
-`tar -xf google-cloud-cli-433.0.0-linux-x86.tar.gz`
-3. Add the gcloud SDK to your path and run the installation
-`./google-cloud-sdk/install.sh`
-4. From the home directory, verify the installation
-`gcloud --version`
-5. Check which componnents are installed
-`gcloud components list`
-6. Install kubectl
-`gcloud components install kubectl`
-7. Connect to your GKE cluster from the master
-`gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
-8. Verify master-gke cluster connectivity
-`kubectl get nodes -o wide`
-
-### Install Kubernetes with Kubectl, Kubeadm, Kubelet
-1. Download the executable from this repo
-`sudo wget https://raw.githubusercontent.com/lerndevops/labs/master/scripts/installK8S.sh -P /tmp`
-2. Change the permissions on the executable
-`sudo chmod 755 /tmp/installK8S.sh`
-3. Execute the file to install Kubernetes
-`sudo bash /tmp/installK8S.sh`
 
 ## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
 ### Set up and initialize the Terraform workspace
@@ -170,7 +180,9 @@ cd /home/certs
 5. Create a private key for your user
 `sudo openssl genrsa -out user1.key 2048`
 6. Create a certificate sign request, user1.csr, using the private key we just created 
-`openssl req -new -key user1.key -out user1.csr`
+`sudo openssl req -new -key user1.key -out user1.csr`
+7. Generate user1.crt by approving the user1.csr we made earlier
+`openssl x509 -req -in user1.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out user1.crt -days 1000 ; ls -ltr`
  
 
 
