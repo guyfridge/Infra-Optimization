@@ -576,4 +576,5 @@ pip3 install google-auth requests
 ```
 ## Resources
 1. https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md
-
+2. https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
+3. 
