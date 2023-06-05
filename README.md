@@ -81,7 +81,7 @@ terraform -help
 1. download the Linux 64-bit archive file
 `curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
 2. Extract the tar file
-`tar -xf google-cloud-cli-433.0.0-linux-x86.tar.gz`
+`tar -xf google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
 3. Add the gcloud SDK to your path and run the installation
 `./google-cloud-sdk/install.sh`
 4. From the home directory, verify the installation
