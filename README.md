@@ -166,11 +166,12 @@ roleRef: # referring to your ClusterRole
 sudo mkdir -p /home/certs
 cd /home/certs
 ```
-4. Create a private key for your user
+4. Comment out `RANDFILE = $ENV::HOME/.rnd` in openssl config file `/etc/ssl/openssl.cnf`
+5. Create a private key for your user
 `sudo openssl genrsa -out user1.key 2048`
-5. Create a certificate sign request, user1.csr, using the private key we just created 
+6. Create a certificate sign request, user1.csr, using the private key we just created 
 `openssl req -new -key user1.key -out user1.csr`
-6. 
+ 
 
 
 ### Install Ansible and Verify
