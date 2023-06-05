@@ -83,16 +83,17 @@ terraform -help
 2. Extract the tar file
 `tar -xf google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
 3. Add the gcloud SDK to your path and run the installation
-`./google-cloud-sdk/install.sh`
-4. From the home directory, verify the installation
+`sudo ./google-cloud-sdk/install.sh`
+4. Restart the controller VM for changes to take place
+5. From the home directory, verify the installation
 `gcloud --version`
-5. Check which componnents are installed
+6. Check which componnents are installed
 `gcloud components list`
-6. Install kubectl
+7. Install kubectl
 `gcloud components install kubectl`
-7. Connect to your GKE cluster from the master
+8. Connect to your GKE cluster from the master
 `gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
-8. Verify master-gke cluster connectivity
+9. Verify master-gke cluster connectivity
 `kubectl get nodes -o wide`
 
 ### [Install Docker on the controller VM](https://docs.docker.com/engine/install/ubuntu/) Necessary?
