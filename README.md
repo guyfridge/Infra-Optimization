@@ -78,7 +78,7 @@ sudo apt-get install terraform
 
 terraform -help
 ```
-### Configure kubectl on the master node to access the GKE cluster
+### Install gcloud CLI and connect to your gcloud account
 1. download the Linux 64-bit archive file
 `curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
 2. Extract the tar file
@@ -86,18 +86,12 @@ terraform -help
 3. Add the gcloud SDK to your path and run the installation
 `./google-cloud-sdk/install.sh`
 4. Restart the controller VM for changes to take place
-5. Initialize gcloud CLI 
+5. Initialize gcloud CLI
 `./google-cloud-sdk/bin/gcloud init`
-6. From the home directory, verify the installation
+6. Verify the installation
 `gcloud --version`
-6. Check which componnents are installed
-`gcloud components list`
-7. Install kubectl
-`gcloud components install kubectl`
-8. Connect to your GKE cluster from the master
-`gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
-9. Verify master-gke cluster connectivity
-`kubectl get nodes -o wide`
+7. Enter your account credentials
+`gcloud auth application-default login`
 
 ### [Install Docker on the controller VM](https://docs.docker.com/engine/install/ubuntu/) Necessary?
 1. Update the apt package index and install packages to allow apt to use a repository over HTTPS
@@ -154,6 +148,15 @@ terraform init
 terraform plan
 terraform apply
 ```
+### Retrieve the access credentials for your gke cluster
+6. Check which componnents are installed
+`gcloud components list`
+7. Install kubectl
+`gcloud components install kubectl`
+8. Connect to your GKE cluster from the master
+`gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
+9. Verify master-gke cluster connectivity
+`kubectl get nodes -o wide`
 
 ## Create a new user with permissions to create, list, get, update, and delete pods
 1. Create a ClusterRole with permissions to create, list, get, update, and delete pods across all namespaces
