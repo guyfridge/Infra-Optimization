@@ -85,40 +85,13 @@ terraform -help
 `tar -xf google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
 3. Add the gcloud SDK to your path and run the installation
 `./google-cloud-sdk/install.sh`
-4. Restart the controller VM for changes to take place
+4. Restart SSH connection to controller VM for changes to take place
 5. Initialize gcloud CLI
 `./google-cloud-sdk/bin/gcloud init`
 6. Verify the installation
 `gcloud --version`
-7. Enter your account credentials
+7. Enter your account credentials (Unnecessary)
 `gcloud auth application-default login`
-
-### [Install Docker on the controller VM](https://docs.docker.com/engine/install/ubuntu/) Necessary?
-1. Update the apt package index and install packages to allow apt to use a repository over HTTPS
-```
-sudo apt-get update
-sudo apt-get install ca-certificates curl gnupg
-```
-2. Add Docker GPG key
-```
-sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
-```
-3. Set up the repository
-```
-echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-```
-### Install Docker Engine Necessary?
-1. Update the apt package index
-`sudo apt-get update`
-2. Install latest version of Docker Engine, containerd, and Docker Compose
-`sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
-3. Verify correct installation of Docker Engine by pulling 'hello-world' image
-`sudo docker run hello-world`
 
 ## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
 ### Set up and initialize the Terraform workspace
@@ -589,6 +562,32 @@ pip3 install google-auth requests
 ```
 ./main.sh
 ```
+### [Install Docker on the controller VM](https://docs.docker.com/engine/install/ubuntu/) Necessary?
+1. Update the apt package index and install packages to allow apt to use a repository over HTTPS
+```
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+```
+2. Add Docker GPG key
+```
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+```
+3. Set up the repository
+```
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+### Install Docker Engine Necessary?
+1. Update the apt package index
+`sudo apt-get update`
+2. Install latest version of Docker Engine, containerd, and Docker Compose
+`sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`
+3. Verify correct installation of Docker Engine by pulling 'hello-world' image
+`sudo docker run hello-world`
 ## Resources
 1. https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md
 2. https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
