@@ -115,7 +115,17 @@ variable "gke_username" {
   description = "gke username"
 }
 ```
-5. Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 1000Mb available space in your designated region for provisioning a six node cluster.
+5. Edit the gke.tf file and add the following inside the google_container_cluster resource.
+```
+# GKE cluster
+resource "google_container_cluster" "primary" {
+  ...
+  timeouts {
+    create = "60m"
+  }
+}
+```
+6.  Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 1000Mb available space in your designated region for provisioning a six node cluster.
 ```
 terraform init
 terraform plan
