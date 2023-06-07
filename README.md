@@ -86,7 +86,9 @@ terraform -help
 3. Add the gcloud SDK to your path and run the installation
 `./google-cloud-sdk/install.sh`
 4. Restart the controller VM for changes to take place
-5. From the home directory, verify the installation
+5. Initialize gcloud CLI 
+`./google-cloud-sdk/bin/gcloud init`
+6. From the home directory, verify the installation
 `gcloud --version`
 6. Check which componnents are installed
 `gcloud components list`
