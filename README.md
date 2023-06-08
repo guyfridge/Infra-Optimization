@@ -187,7 +187,17 @@ cd /home/certs
 `sudo openssl req -new -key user1.key -out user1.csr`
 7. Generate user1.crt by approving the user1.csr we made earlier
 `sudo openssl x509 -req -in user1.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out user1.crt -days 1000 ; ls -ltr`
- 
+### Create kubeconfig file
+1. Add cluster details to config file
+`sudo kubectl config --kubeconfig=user1.conf set-cluster production --server=https://10.138.0.6:6443 --certificate-authority=/etc/kubernetes/pki/ca.crt`
+2. Add user details to config file
+`sudo kubectl config --kubeconfig=user1.conf set-credentials user1 --client-certificate=/home/user1/certs/user1.crt --client-key=/home/user1/certs/user1.key`
+3. Add context details to config file
+`sudo kubectl config --kubeconfig=user1.conf set-context prod --cluster=production --namespace=prod --user=user1`
+4. Set prod context for use
+`sudo kubectl config --kubeconfig=user1.conf use-context prod` 
+5. Validate API access
+`sudo kubectl --kubeconfig user1.conf version --short`
 
 ## Resources
 1. https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md
