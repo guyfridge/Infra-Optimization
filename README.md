@@ -177,8 +177,8 @@ roleRef: # referring to your ClusterRole
 ```
 3. Create a directory for storing the user1 cert
 ```
-mkdir -p /home/certs
-cd /home/certs
+mkdir -p $HOME/certs
+cd $HOME/certs
 ```
 4. Comment out `RANDFILE = $ENV::HOME/.rnd` in openssl config file `/etc/ssl/openssl.cnf`
 5. Create a private key for your user
