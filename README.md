@@ -47,6 +47,14 @@ sudo apt-get upgrade
 `sudo chmod 755 /tmp/installK8S.sh`
 3. Execute the file to install Kubernetes
 `sudo bash /tmp/installK8S.sh`
+4. Initialize Kubernetes master node
+`sudo kubeadm init --cri-socket unix:///var/run/cri-dockerd.sock --ignore-preflight-errors=all`
+5. To start using your cluster, run the following as a regular user:
+```
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
 
 ### Verify installation of Docker and Kubernetes
 ```
@@ -178,7 +186,7 @@ cd /home/certs
 6. Create a certificate sign request, user1.csr, using the private key we just created 
 `sudo openssl req -new -key user1.key -out user1.csr`
 7. Generate user1.crt by approving the user1.csr we made earlier
-`openssl x509 -req -in user1.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out user1.crt -days 1000 ; ls -ltr`
+`sudo openssl x509 -req -in user1.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out user1.crt -days 1000 ; ls -ltr`
  
 
 
