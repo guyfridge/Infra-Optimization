@@ -47,14 +47,6 @@ sudo apt-get upgrade
 `sudo chmod 755 /tmp/installK8S.sh`
 3. Execute the file to install Kubernetes
 `sudo bash /tmp/installK8S.sh`
-4. Initialize Kubernetes master node
-`sudo kubeadm init --cri-socket unix:///var/run/cri-dockerd.sock --ignore-preflight-errors=all`
-5. To start using your cluster, run the following as a regular user:
-```
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-```
 
 ### Verify installation of Docker and Kubernetes
 ```
@@ -86,7 +78,7 @@ sudo apt-get install terraform
 
 terraform -help
 ```
-### Install gcloud CLI and connect to your gcloud account
+### Install gcloud CLI
 1. download the Linux 64-bit archive file
 `curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-433.0.0-linux-x86_64.tar.gz`
 2. Extract the tar file
@@ -98,8 +90,13 @@ terraform -help
 `./google-cloud-sdk/bin/gcloud init`
 6. Verify the installation
 `gcloud --version`
-7. Enter your account credentials (Unnecessary)
-`gcloud auth application-default login`
+### Retrieve the access credentials for your gke cluster
+1. Install gke-gcloud-auth-plugin to configure your gke cluster with kubectl from the controller vm
+`gcloud components install gke-gcloud-auth-plugin`
+8. Connect to your GKE cluster from the master
+`gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
+9. Verify master-gke cluster connectivity. You should be able to see all six nodes in the cluster after running the following.
+`kubectl get nodes`
 
 ## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
 ### Set up and initialize the Terraform workspace
@@ -133,23 +130,22 @@ resource "google_container_cluster" "primary" {
   }
 }
 ```
-6.  Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 1000Mb available space in your designated region for provisioning a six node cluster.
+6.  Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 1000Gb available space in your designated region for provisioning a six node cluster.
 ```
 terraform init
 terraform plan
 terraform apply
 ```
-### Retrieve the access credentials for your gke cluster
-1. Install gke-gcloud-auth-plugin to configure your gke cluster with kubectl from the controller vm
-`gcloud components install gke-gcloud-auth-plugin`
-8. Connect to your GKE cluster from the master
-`gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
-9. Verify master-gke cluster connectivity
-`kubectl get nodes -o wide`
-
 ## Create a new user with permissions to create, list, get, update, and delete pods
-1. Create a ClusterRole with permissions to create, list, get, update, and delete pods across all namespaces
-`sudo vi pod-management-clusterRole.yaml`
+1. a. Go to your google cloud account 
+   b. navigate to you project
+   c. Click 'IAM Admin' from main menu
+   d. Click the user associated with your master VM
+   e. Click 'Edit principal'
+   f. Change role to 'Kubernetes Engine Admin'
+   g. Click save
+3. Go back to your VM. Create a ClusterRole YAML file that grants permissions to create, list, get, update, and delete pods across all namespaces
+`vi pod-management-clusterRole.yaml`
 ```
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -157,11 +153,11 @@ metadata:
   name: pod-management-clusterrole
 rules:
 - apiGroups: ["*"]
-  resources: ["pods","deployments", "replicasets", "services"]
+  resources: ["pods", "deployments", "nodes", "replicasets", "services"]
   verbs: ["get", "list", "delete", "create", "update"]
 ```
-2. Create a ClusterRoleBinding to Assign the ClusterRole to a specific user
-`sudo vi pod-management-clusterRoleBinding.yaml`
+2. Create a ClusterRoleBinding YAML file to assign the ClusterRole to a specific user
+`vi pod-management-clusterRoleBinding.yaml`
 ```
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -172,9 +168,23 @@ subjects:
   name: user1 # name of your service account
 roleRef: # referring to your ClusterRole
   kind: ClusterRole
-  name: pod-management
+  name: pod-management-clusterrole
   apiGroup: rbac.authorization.k8s.io
 ```
+3. Create the ClusterRole using the YAML file we wrote
+`kubectl create -f pod-management-clusterRole.yaml`
+4. Create the ClusterRoleBinding using the YAML we wrote
+`kubectl create -f pod-management-clusterRoleBinding.yaml`
+5. Verify the user's permissions. You should be able to see all six nodes in the cluster after entering the following.
+`kubectl get nodes --as=user1`
+
+## Resources
+1. https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md
+2. https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
+3. https://developer.hashicorp.com/terraform/tutorials/kubernetes/gke
+
+
+
 3. Create a directory for storing the user1 cert
 ```
 mkdir -p $HOME/certs
@@ -182,25 +192,22 @@ cd $HOME/certs
 ```
 4. Comment out `RANDFILE = $ENV::HOME/.rnd` in openssl config file `/etc/ssl/openssl.cnf`
 5. Create a private key for your user
-`sudo openssl genrsa -out user1.key 2048`
+`openssl genrsa -out user1.key 2048`
 6. Create a certificate sign request, user1.csr, using the private key we just created 
-`sudo openssl req -new -key user1.key -out user1.csr`
+`openssl req -new -key user1.key -out user1.csr`
 7. Generate user1.crt by approving the user1.csr we made earlier
-`sudo openssl x509 -req -in user1.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out user1.crt -days 1000 ; ls -ltr`
+`openssl x509 -req -in user1.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out user1.crt -days 1000 ; ls -ltr`
 ### Create kubeconfig file
 1. Add cluster details to config file
-`sudo kubectl config --kubeconfig=user1.conf set-cluster production --server=https://10.138.0.6:6443 --certificate-authority=/etc/kubernetes/pki/ca.crt`
+`kubectl config --kubeconfig=user1.conf set-cluster <cluster-name> --server=https://10.10.0.2:6443 --certificate-authority=/etc/kubernetes/pki/ca.crt`
 2. Add user details to config file
-`sudo kubectl config --kubeconfig=user1.conf set-credentials user1 --client-certificate=/home/user1/certs/user1.crt --client-key=/home/user1/certs/user1.key`
+`kubectl config --kubeconfig=user1.conf set-credentials user1 --client-certificate=/home/user1/certs/user1.crt --client-key=/home/user1/certs/user1.key`
 3. Add context details to config file
-`sudo kubectl config --kubeconfig=user1.conf set-context prod --cluster=production --namespace=prod --user=user1`
+List available contexts with 
+`kubectl config get-contexts` 
+Then set the appropriate context using
+`kubectl config --kubeconfig=user1.conf set-context <context-name> --cluster=<cluster-name> --user=user1`
 4. Set prod context for use
-`sudo kubectl config --kubeconfig=user1.conf use-context prod` 
+`kubectl config --kubeconfig=user1.conf use-context <context-name>` 
 5. Validate API access
-`sudo kubectl --kubeconfig user1.conf version --short`
-
-## Resources
-1. https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md
-2. https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
-3. https://developer.hashicorp.com/terraform/tutorials/kubernetes/gke
-4. 
+`kubectl --kubeconfig user1.conf version --short`
