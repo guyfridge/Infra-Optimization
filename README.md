@@ -137,14 +137,14 @@ terraform plan
 terraform apply
 ```
 ## Create a new user with permissions to create, list, get, update, and delete pods
-1. a. Go to your google cloud account 
-   b. navigate to you project
-   c. Click 'IAM Admin' from main menu
-   d. Click the user associated with your master VM
-   e. Click 'Edit principal'
-   f. Change role to 'Kubernetes Engine Admin'
-   g. Click save
-3. Go back to your VM. Create a ClusterRole YAML file that grants permissions to create, list, get, update, and delete pods across all namespaces
+1. Go to your google cloud account 
+2. navigate to you project
+3. Click 'IAM Admin' from main menu
+4. Click the user associated with your master VM
+5. Click 'Edit principal'
+6. Change role to 'Kubernetes Engine Admin'
+7. Click save
+8. Go back to your VM. Create a ClusterRole YAML file that grants permissions to create, list, get, update, and delete pods across all namespaces
 `vi pod-management-clusterRole.yaml`
 ```
 apiVersion: rbac.authorization.k8s.io/v1
@@ -156,7 +156,7 @@ rules:
   resources: ["pods", "deployments", "nodes", "replicasets", "services"]
   verbs: ["get", "list", "delete", "create", "update"]
 ```
-2. Create a ClusterRoleBinding YAML file to assign the ClusterRole to a specific user
+9. Create a ClusterRoleBinding YAML file to assign the ClusterRole to a specific user
 `vi pod-management-clusterRoleBinding.yaml`
 ```
 apiVersion: rbac.authorization.k8s.io/v1
@@ -171,11 +171,11 @@ roleRef: # referring to your ClusterRole
   name: pod-management-clusterrole
   apiGroup: rbac.authorization.k8s.io
 ```
-3. Create the ClusterRole using the YAML file we wrote
+10. Create the ClusterRole using the YAML file we wrote
 `kubectl create -f pod-management-clusterRole.yaml`
-4. Create the ClusterRoleBinding using the YAML we wrote
+11. Create the ClusterRoleBinding using the YAML we wrote
 `kubectl create -f pod-management-clusterRoleBinding.yaml`
-5. Verify the user's permissions. You should be able to see all six nodes in the cluster after entering the following.
+12. Verify the user's permissions. You should be able to see all six nodes in the cluster after entering the following.
 `kubectl get nodes --as=user1`
 
 ## Resources
