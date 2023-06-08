@@ -132,10 +132,8 @@ terraform plan
 terraform apply
 ```
 ### Retrieve the access credentials for your gke cluster
-6. Check which componnents are installed
-`gcloud components list`
-7. Install kubectl
-`gcloud components install kubectl`
+1. Install gke-gcloud-auth-plugin to configure your gke cluster with kubectl from the controller vm
+`gcloud components install gke-gcloud-auth-plugin`
 8. Connect to your GKE cluster from the master
 `gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
 9. Verify master-gke cluster connectivity
