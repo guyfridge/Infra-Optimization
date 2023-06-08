@@ -130,7 +130,7 @@ resource "google_container_cluster" "primary" {
   }
 }
 ```
-6.  Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 1000Gb available space in your designated region for provisioning a six node cluster.
+6.  Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 700Gb available space in your designated region for provisioning a six node cluster.
 ```
 terraform init
 terraform plan
