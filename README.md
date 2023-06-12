@@ -178,6 +178,29 @@ roleRef: # referring to your ClusterRole
 12. Verify the user's permissions. You should be able to see all six nodes in the cluster after entering the following.
 `kubectl get nodes --as=user1`
 
+## Configure an application on the pod
+We will deploy a simple web server containerized application to our GKE cluster.
+1. Build a deployment on the cluster by pulling a docker image for a containerized web server application
+```
+kubectl create deployment hello-server \
+>     --image=us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
+```
+2. Verify the successful creation of the deployment
+```
+kubectl get deployment
+kubectl get pods
+```
+3. Expose the application to the internet by creating a LoadBalancer service that directs external traffic to a given port on the application
+`kubectl expose deployment hello-server --type LoadBalancer --port 80 --target-port 8080`
+4. Verify the successful creation of the service
+`kubectl get service hello-server`
+5. Obtain external IP of the 'hello-server' service from the above command and use with the exposed port to view the web application from the browswer
+`https://<external-IP>:port#`
+
+## Take a snapshot of the ETCD database
+
+
+
 ## Resources
 1. https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md
 2. https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
