@@ -5,7 +5,7 @@ Create a DevOps infrastructure for an e-commerce application to run on high-avai
 2. On the controller VM, use Terraform to automate the provisioning of a GKE cluster with Docker installed
 3. Create a new user with permissions to create, list, get, update, and delete pods
 4. Configure application on the pod
-5. Take snapshot of ETCD database
+5. Install Backup for GKE and plan a set of backups
 6. Set criteria such that if the CPU exceeds 50%, environments automatically get scaled up and configured
 
 ## Manually create a controller VM on Google Cloud and install Terraform, Docker, and Kubernetes on it
@@ -197,7 +197,7 @@ kubectl get pods
 5. Obtain external IP of the 'hello-server' service from the above command and use with the exposed port to view the web application from the browswer
 `https://<external-IP>:port#`
 
-## Install Backup for GKE
+## Install Backup for GKE and plan a set of backups
 GKE uses 'Backup for GKE' to backup and restore workloads in clusters.
 1. Launch the cloud shell from inside your google cloud project. Enable the Backup for GKE API by entering the following:
 `gcloud services enable gkebackup.googleapis.com`
