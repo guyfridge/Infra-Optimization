@@ -98,7 +98,7 @@ terraform -help
 9. Verify master-gke cluster connectivity. You should be able to see all six nodes in the cluster after running the following.
 `kubectl get nodes`
 
-## On the controller VM, use Terraform to automate the provisioning of a Kubernetes cluster with Docker installed
+## On the controller VM, use Terraform to automate the provisioning of a GKE cluster with Docker installed
 ### Set up and initialize the Terraform workspace
 1. Clone the following respository on the controller VM
 ```
