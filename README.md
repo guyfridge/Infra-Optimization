@@ -6,7 +6,7 @@ Create a DevOps infrastructure for an e-commerce application to run on high-avai
 3. Create a new user with permissions to create, list, get, update, and delete pods
 4. Configure application on the pod
 5. Take snapshot of ETCD database
-6. Set criteria such that if the memory of CPU goes beyond 50%, environments automatically get scaled up and configured
+6. Set criteria such that if the CPU exceeds 50%, environments automatically get scaled up and configured
 
 ## Manually create a controller VM on Google Cloud and install Terraform, Docker, and Kubernetes on it
 Inside Google Cloud, create an e2-medium machine with the following:
@@ -232,8 +232,8 @@ gcloud beta container backup-restore backup-plans create first-backup \
 ```
 hit 'enter'
 
-## Set criteria such that if the memory of CPU goes beyond 50%, environments automatically get scaled up and configured
-1. Create a HorizontalPodAutoscaler object that targets the CPU utilization of the 'hello-server' deployment such that when CPU usage exceeds 50%, a minimum of one and a maximum of ten replicas are deployed
+## Set criteria such that if the CPU exceeds 50%, environments automatically get scaled up and configured
+1. Create a HorizontalPodAutoscaler object that targets the CPU utilization of the 'hello-server' deployment such that when CPU exceeds 50%, a minimum of one and a maximum of ten replicas are deployed
 `kubectl autoscale deployment hello-server --cpu-percent=50 --min=1 --max=10` 
 
 ## Resources
