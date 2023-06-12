@@ -197,40 +197,51 @@ kubectl get pods
 5. Obtain external IP of the 'hello-server' service from the above command and use with the exposed port to view the web application from the browswer
 `https://<external-IP>:port#`
 
-## Take a snapshot of the ETCD database
+## Install Backup for GKE
+GKE uses 'Backup for GKE' to backup and restore workloads in clusters.
+1. Launch the cloud shell from inside your google cloud project. Enable the Backup for GKE API by entering the following:
+`gcloud services enable gkebackup.googleapis.com`
+2. Install Backup for GKE on your existing cluster
+```
+gcloud container clusters update sl-capstone-project-gke \
+   --project=sl-capstone-project  \
+   --region=us-central1 \
+   --update-addons=BackupRestore=ENABLED
+```
+3. Verify installation of Backup for GKE
+```
+gcloud container clusters describe sl-capstone-project-gke \
+    --project=sl-capstone-project  \
+    --region=us-central1
+```
+The output should include:
+```
+addonsConfig:
+  gkeBackupAgentConfig:
+    enabled: true
+ ```
+4. Create a backup plan to initiate a backup of the cluster
+```
+gcloud beta container backup-restore backup-plans create first-backup \
+    --project=sl-capstone-project \
+    --location=us-central1 \
+    --cluster=projects/sl-capstone-project/locations/us-central1/clusters/sl-capstone-project-gke \
+    --all-namespaces \
+    --include-secrets \
+    --include-volume-data \
+```
+hit 'enter'
 
-
+## Set criteria such that if the memory of CPU goes beyond 50%, environments automatically get scaled up and configured
+1. Create a HorizontalPodAutoscaler object that targets the CPU utilization of the 'hello-server' deployment such that when CPU usage exceeds 50%, a minimum of one and a maximum of ten replicas are deployed
+`kubectl autoscale deployment hello-server --cpu-percent=50 --min=1 --max=10` 
 
 ## Resources
 1. https://github.com/lerndevops/educka/blob/3b04283dc177204ec2dc99dd58617cee2d533cf7/1-intall/install-kubernetes-with-docker-virtualbox-vm-ubuntu.md
 2. https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
 3. https://developer.hashicorp.com/terraform/tutorials/kubernetes/gke
+4. https://cloud.google.com/kubernetes-engine/docs/deploy-app-cluster
+5. https://cloud.google.com/kubernetes-engine/docs/add-on/backup-for-gke/how-to/install#enable_the_api
+6. https://cloud.google.com/kubernetes-engine/docs/add-on/backup-for-gke/how-to/backup-plan#create
+7. https://cloud.google.com/kubernetes-engine/docs/how-to/horizontal-pod-autoscaling#kubectl-autoscale
 
-
-
-3. Create a directory for storing the user1 cert
-```
-mkdir -p $HOME/certs
-cd $HOME/certs
-```
-4. Comment out `RANDFILE = $ENV::HOME/.rnd` in openssl config file `/etc/ssl/openssl.cnf`
-5. Create a private key for your user
-`openssl genrsa -out user1.key 2048`
-6. Create a certificate sign request, user1.csr, using the private key we just created 
-`openssl req -new -key user1.key -out user1.csr`
-7. Generate user1.crt by approving the user1.csr we made earlier
-`openssl x509 -req -in user1.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out user1.crt -days 1000 ; ls -ltr`
-### Create kubeconfig file
-1. Add cluster details to config file
-`kubectl config --kubeconfig=user1.conf set-cluster <cluster-name> --server=https://10.10.0.2:6443 --certificate-authority=/etc/kubernetes/pki/ca.crt`
-2. Add user details to config file
-`kubectl config --kubeconfig=user1.conf set-credentials user1 --client-certificate=/home/user1/certs/user1.crt --client-key=/home/user1/certs/user1.key`
-3. Add context details to config file
-List available contexts with 
-`kubectl config get-contexts` 
-Then set the appropriate context using
-`kubectl config --kubeconfig=user1.conf set-context <context-name> --cluster=<cluster-name> --user=user1`
-4. Set prod context for use
-`kubectl config --kubeconfig=user1.conf use-context <context-name>` 
-5. Validate API access
-`kubectl --kubeconfig user1.conf version --short`
