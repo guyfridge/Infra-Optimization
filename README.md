@@ -4,7 +4,7 @@ Create a DevOps infrastructure for an e-commerce application to run on high-avai
 1. Manually create a controller VM on Google Cloud and install Terraform and Kubernetes
 2. On the controller VM, use Terraform to automate the provisioning of a GKE cluster with Docker installed
 3. Create a new user with permissions to create, list, get, update, and delete pods
-4. Configure application on the pod
+4. Configure the application on the pod
 5. Install Backup for GKE and plan a set of backups
 6. Set criteria such that if the CPU exceeds 50%, environments automatically get scaled up and configured
 
@@ -90,9 +90,9 @@ terraform -help
 `./google-cloud-sdk/bin/gcloud init`
 6. Verify the installation
 `gcloud --version`
-### Retrieve the access credentials for your gke cluster
-Typically with GKE, all of the nodes in the cluster are worker nodes and the master node is hidden and managed for you by Google. Instead, you interface with your cluster via Cloud Shell which acts as a kind of control plane. This step will allow us to use our e2-medium machine to control and manage the GKE cluster we will be provisioning in the next steps. 
-1. Install gke-gcloud-auth-plugin to configure your gke cluster with kubectl from the controller vm
+### Retrieve the access credentials for your GKE cluster
+Most users of Kubernetes are used to a cluster architecture wherein at least one master node can act as the control plane for the remaining worker nodes, facilitating pod-scheduling and other aspects of container orchestration. GKE is different in that all of the nodes in the cluster are worker nodes and the master node is hidden from and managed for you by Google. Instead, you interface with your cluster via Cloud Shell which acts as a kind of control plane. The following steps will allow us to use our e2-medium machine to control and manage the GKE cluster we will be provisioning in the next section. Technically, our e2-medium machine will not be part of our GKE cluster and cannot accept any pods. It is merely acting as a control plane for our cluster.
+1. Install gke-gcloud-auth-plugin to configure your GKE cluster with kubectl from the controller vm
 `gcloud components install gke-gcloud-auth-plugin`
 8. Connect to your GKE cluster from the master
 `gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
@@ -100,8 +100,9 @@ Typically with GKE, all of the nodes in the cluster are worker nodes and the mas
 `kubectl get nodes`
 
 ## On the controller VM, use Terraform to automate the provisioning of a GKE cluster with Docker installed
+In this step, we will use Terraform to create a six-node GKE cluster for purposes of high availability. 
 ### Set up and initialize the Terraform workspace
-1. Clone the following respository on the controller VM
+1. Clone the following repository on the controller VM
 ```
 git clone https://github.com/hashicorp/learn-terraform-provision-gke-cluster
 ```
@@ -131,7 +132,7 @@ resource "google_container_cluster" "primary" {
   }
 }
 ```
-6.  Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Additionally, ensure a minimum of 700Gb available space in your designated region for provisioning a six node cluster. 
+6.  Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Additionally, ensure a minimum of 700Gb available space in your designated region for provisioning a six-node cluster. 
 ```
 terraform init
 terraform plan
@@ -139,8 +140,8 @@ terraform apply
 ```
 ## Create a new user with permissions to create, list, get, update, and delete pods
 1. Go to your google cloud account 
-2. navigate to you project
-3. Click 'IAM Admin' from main menu
+2. navigate to your project
+3. Click 'IAM Admin' from the main menu
 4. Click the user associated with your master VM
 5. Click 'Edit principal'
 6. Change role to 'Kubernetes Engine Admin'
@@ -195,7 +196,7 @@ kubectl get pods
 `kubectl expose deployment hello-server --type LoadBalancer --port 80 --target-port 8080`
 4. Verify the successful creation of the service
 `kubectl get service hello-server`
-5. Obtain external IP of the 'hello-server' service from the above command and use with the exposed port to view the web application from the browswer
+5. Obtain the external IP of the 'hello-server' service from the above command and use the exposed port to view the web application from the browser
 `https://<external-IP>:port#`
 
 ## Install Backup for GKE and plan a set of backups
