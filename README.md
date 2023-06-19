@@ -91,11 +91,12 @@ terraform -help
 6. Verify the installation
 `gcloud --version`
 ### Retrieve the access credentials for your gke cluster
+Typically with GKE, all of the nodes in the cluster are worker nodes and the master node is hidden and managed for you by Google. Instead, you interface with your cluster via Cloud Shell which acts as a kind of control plane. This step will allow us to use our e2-medium machine to control and manage the GKE cluster we will be provisioning in the next steps. 
 1. Install gke-gcloud-auth-plugin to configure your gke cluster with kubectl from the controller vm
 `gcloud components install gke-gcloud-auth-plugin`
 8. Connect to your GKE cluster from the master
 `gcloud container clusters get-credentials <your-project-name>-gke --region <region> --project <your-project-name>`
-9. Verify master-gke cluster connectivity. You should be able to see all six nodes in the cluster after running the following.
+9. Verify master-gke cluster connectivity. You will not be able to see any nodes yet as we will create the cluster in the next section using Terraform.
 `kubectl get nodes`
 
 ## On the controller VM, use Terraform to automate the provisioning of a GKE cluster with Docker installed
@@ -106,7 +107,7 @@ git clone https://github.com/hashicorp/learn-terraform-provision-gke-cluster
 ```
 2. Change to the newly created directory 
 `cd learn-terraform-provision-gke-cluster`
-3. Edit the terraform.tfvars file with your Google Cloud project_id and region value
+3. Edit the terraform.tfvars file with your Google Cloud project_id and region value. This file specifies the Google Cloud Project where the resources will be deployed and also determines what region the VMs/nodes in the cluster will be using.
 ```
 # terraform.tfvars
 project_id = "sl-capstone-project"
@@ -120,7 +121,7 @@ variable "gke_username" {
   description = "gke username"
 }
 ```
-5. Edit the gke.tf file and add the following inside the google_container_cluster resource.
+5. Edit the gke.tf file and add the following inside the google_container_cluster resource. This ensures that Terraform will allow the cluster creation process to continue uninterrupted for 60 minutes. The process is unlikely to require this much time.
 ```
 # GKE cluster
 resource "google_container_cluster" "primary" {
@@ -130,7 +131,7 @@ resource "google_container_cluster" "primary" {
   }
 }
 ```
-6.  Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Also ensure a minimum of 700Gb available space in your designated region for provisioning a six node cluster.
+6.  Ensure that Compute Engine API and Kubernetes Engine API are enabled on your Google Cloud project. Additionally, ensure a minimum of 700Gb available space in your designated region for provisioning a six node cluster. 
 ```
 terraform init
 terraform plan
